@@ -20,9 +20,16 @@ const io = new Server(httpServer, {
 
 io.on("connection", socket => {
 
+    socket.join('main-room')
+
     socket.on('join-chat', (args: { socketID: string, name: string }) => {
-        socket.join('main-room')
+        // io.to('main-room').emit('user-join', `${args.name} joined the chat room`)
         io.to('main-room').emit('user-join', `${args.name} joined the chat room`)
+    })
+
+    socket.on('send-msg', (args: { socketID: string, name: string, msg: string, time: string }) => {
+        // socket.join('main-room')
+        io.to('main-room').emit('output-msg', { name: args.name, msg: args.msg, time: args.time, socketID: args.socketID })
     })
 
 })
